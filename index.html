@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjI4IiBoZWlnaHQ9IjI4IiByeD0iNCIgZmlsbD0iIzQ0ODhjYyIvPjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyMCIgaGVpZ2h0PSI1IiByeD0iMSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjgiIGN5PSIxNSIgcj0iMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjE0IiBjeT0iMTUiIHI9IjIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjE1IiByPSIyIiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMjYiIGN5PSIxNSIgcj0iMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjgiIGN5PSIyMSIgcj0iMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjE0IiBjeT0iMjEiIHI9IjIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIxIiByPSIyIiBmaWxsPSIjZmZmIi8+PGNpcmNsZSBjeD0iMjYiIGN5PSIyMSIgcj0iMiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjE0IiBjeT0iMjciIHI9IjIiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjI3IiByPSIyIiBmaWxsPSIjZmZmIi8+PC9zdmc+">
+<title>国平智能制造报价</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32px;font:14px/1.4 system-ui,-apple-system,sans-serif}
+.card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:14px 12px 16px;max-width:520px;width:100%}
+h2{font-size:15px;margin-bottom:12px;text-align:center;color:#333}
+.sec{border:1px solid #e8e8e8;border-radius:6px;margin-bottom:10px;overflow:hidden}
+.sec-h{background:#fafafa;padding:7px 10px;font-size:13px;font-weight:600;color:#555;display:flex;justify-content:space-between;align-items:center}
+.sec-h .add{width:26px;height:26px;border:1px solid #4488cc;border-radius:4px;background:#fff;font-size:18px;line-height:1;cursor:pointer;color:#4488cc;text-align:center;padding:0;flex-shrink:0;margin-left:8px}
+.sec-h .add:active{background:#e8f0fa}
+.sec-b{padding:8px 10px}
+.it{padding:6px 0;border-bottom:1px solid #f0f0f0}
+.it:last-child{border-bottom:none}
+.r2{display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:wrap}
+.r2 label{font-size:11px;color:#888;flex-shrink:0}
+.r2 b{font-size:16px;font-weight:700;width:14px;text-align:center}
+.r2 input{width:56px;flex:none;padding:7px 2px;border:1px solid #ccc;border-radius:3px;font-size:14px;text-align:center;outline:none;-webkit-appearance:none}
+.r2 input.w2{width:44px}
+.r2 input.w3{width:68px}
+.r2 input.w4{width:72px}
+.r2 input:focus{border-color:#4488cc}
+.r2 .unit{font-size:10px;color:#aaa;flex-shrink:0}
+.it .del{width:22px;height:22px;border:1px solid #ecc;border-radius:3px;background:#fff;font-size:13px;line-height:1;cursor:pointer;color:#c66;text-align:center;padding:0;flex-shrink:0;margin-left:auto}
+.toprow{display:flex;gap:8px}
+.toprow .half{flex:1;display:flex;flex-direction:column;gap:4px}
+.toprow .half.r{border-left:1px solid #eee;padding-left:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px}
+.res{margin-top:10px;background:#fafafa;border-radius:6px;padding:10px 12px}
+.res .rl{display:flex;justify-content:space-between;padding:1px 0;font-size:12px}
+.res .rl b{font-size:14px;color:#c0392b}
+.res .rl .label{color:#888}
+.total{border-top:2px solid #ddd;margin-top:8px;padding-top:6px;display:flex;justify-content:space-between;align-items:center}
+.total span:last-child{font-size:22px;font-weight:700;color:#c0392b}
+.note{font-size:10px;color:#aaa;margin-top:2px}
+.sub{font-size:11px;color:#888;margin-bottom:4px}
+.hdr{width:50px;flex:none;padding:4px 2px;border:1px solid #ccc;border-radius:3px;font-size:12px;text-align:center;outline:none;-webkit-appearance:none;background:#fff;margin:0 2px}
+.hdr:focus{border-color:#4488cc}
+ .hdrl{font-size:10px;color:#999;font-weight:400;margin-right:1px}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>国平智能制造报价</h2>
+
+<div class="sec">
+<div class="sec-h">钢板 <span class="hdrl">铁价</span><input id="pUp" class="hdr" type="number" step="any"><span class="hdrl">废料</span><input id="pSp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addPlate()">+</button></div>
+<div class="sec-b" id="plate-list"></div>
+</div>
+
+<div class="sec">
+<div class="sec-h">螺纹钢 <span class="hdrl">吨价</span><input id="rUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addRebar()">+</button></div>
+<div class="sec-b" id="rebar-list"></div>
+</div>
+
+<div class="sec">
+<div class="sec-h">垫片 <span class="hdrl">铁价</span><input id="sUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addShim()">+</button></div>
+<div class="sec-b" id="shim-list"></div>
+</div>
+
+<div class="sec">
+<div class="sec-h">槽钢 <span class="hdrl">吨价</span><input id="cUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addChannel()">+</button></div>
+<div class="sec-b" id="channel-list"></div>
+</div>
+
+<div class="sec">
+<div class="sec-h">电焊</div>
+<div class="sec-b">
+<div class="sub">直线焊</div>
+<div class="r2"><label>长度</label><input id="wlen" class="w3" type="number" step="any"><span class="unit">mm</span></div>
+<div class="sub">圈焊</div>
+<div class="r2"><label>直径</label><input id="wcir" class="w2" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="wcirn" class="w2" type="number" step="any"><span class="unit">个</span></div>
+<div class="note">* 自动计价 0.004 元/mm，圈焊周长=π×直径</div>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-h">共用费用（按总净重计算）</div>
+<div class="sec-b">
+<div class="grid2">
+<div class="r2" style="margin:0"><label>运费</label><input id="fr" type="number" step="any"><span class="unit">元/吨</span></div>
+<div class="r2" style="margin:0"><label>整理</label><input id="zf" type="number" step="any"><span class="unit">元/吨</span></div>
+<div class="r2" style="margin:0"><label>镀锌</label><input id="dx" type="number" step="any"><span class="unit">元/吨</span></div>
+</div>
+</div>
+</div>
+
+<div class="res">
+<div class="rl"><span class="label">钢板 — 总净重 / 合计</span><span><span id="p_wt">—</span> kg / <span id="p_price">—</span></span></div>
+<div class="rl"><span class="label">螺纹钢 — 总重 / 合计</span><span><span id="r_wt">—</span> kg / <span id="r_price">—</span></span></div>
+<div class="rl"><span class="label">垫片 — 净重 / 金额</span><span><span id="s_wt">—</span> kg / <span id="s_price">—</span></span></div>
+<div class="rl"><span class="label">槽钢 — 总重 / 合计</span><span><span id="c_wt">—</span> kg / <span id="c_price">—</span></span></div>
+<div class="rl"><span class="label">电焊 — 直线 / 圈焊</span><span><span id="w1_price">—</span> / <span id="w2_price">—</span></span></div>
+<div class="rl"><span class="label">运费 / 整理 / 镀锌</span><span id="shared">—</span></div>
+</div>
+
+<div class="total"><span>净价</span><span id="total">¥0.00</span></div>
+</div>
+
+<script>
+const D=7.85,WELD=0.004;
+var pid=0,rid=0,cid=0;
+ var sid=0,plates=[],rebars=[],channels=[],shims=[];
+
+function fmt(n){return n!==null&&isFinite(n)?n.toFixed(2):'—'}
+function $(id){return document.getElementById(id)}
+function gv(id){return parseFloat($(id).value)||0}
+function gi(id){return parseInt($(id).value)||0}
+function kg(mm3){return mm3/1e3*D/1e3}
+function tp(kg,up){return kg/1e3*up}
+
+function bindInputs(el){
+  el.querySelectorAll('input').forEach(function(i){i.addEventListener('input',calc)})
+}
+
+// Plate
+function makePlateHTML(id){
+  return '<div class="it" id="p'+id+'">'+
+    '<div class="toprow">'+
+    '<div class="half">'+
+    '<div class="r2"><b>长</b><input id="pl'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div>'+
+    '<div class="r2"><b>宽</b><input id="pw'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div>'+
+    '<div class="r2"><b>厚</b><input id="pt'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div>'+
+    '</div>'+
+    '<div class="half r">'+
+    '<div class="r2"><label>孔长</label><input id="phl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div>'+
+    '<div class="r2"><label>孔宽</label><input id="phw'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div>'+
+    '<div class="r2"><label>数量</label><input id="phn'+id+'" class="w2" type="number" step="any"><span class="unit">个</span></div>'+
+    '</div>'+
+    '</div>'+
+    '<div class="r2" style="margin:4px 0 0;justify-content:flex-end"><button class="del" onclick="delPlate('+id+')">×</button></div>'+
+    '</div>'
+}
+function addPlate(){pid++;plates.push(pid);var d=document.createElement('div');d.innerHTML=makePlateHTML(pid);var el=d.firstElementChild;$('plate-list').appendChild(el);bindInputs(el);calc()}
+function delPlate(id){var el=$('p'+id);if(el)el.remove();plates=plates.filter(function(x){return x!==id});calc()}
+
+// Rebar
+function makeRebarHTML(id){
+  return '<div class="it" id="rb'+id+'">'+
+    '<div class="r2"><label>直径</label><input id="rd'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span>'+
+    '<label>长度</label><input id="rl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span>'+
+    '<label>数量</label><input id="rn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span>'+
+    '<button class="del" onclick="delRebar('+id+')">×</button></div>'+
+    '</div>'
+}
+function addRebar(){rid++;rebars.push(rid);var d=document.createElement('div');d.innerHTML=makeRebarHTML(rid);var el=d.firstElementChild;$('rebar-list').appendChild(el);bindInputs(el);calc()}
+function delRebar(id){var el=$('rb'+id);if(el)el.remove();rebars=rebars.filter(function(x){return x!==id});calc()}
+
+// Channel
+function makeChannelHTML(id){
+  return '<div class="it" id="ch'+id+'">'+
+    '<div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span>'+
+    '<label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span>'+
+    '<label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span>'+
+    '<button class="del" onclick="delChannel('+id+')">×</button></div>'+
+    '</div>'
+}
+function addChannel(){cid++;channels.push(cid);var d=document.createElement('div');d.innerHTML=makeChannelHTML(cid);var el=d.firstElementChild;$('channel-list').appendChild(el);bindInputs(el);calc()}
+function delChannel(id){var el=$('ch'+id);if(el)el.remove();channels=channels.filter(function(x){return x!==id});calc()}
+
+// Shim
+function makeShimHTML(id){
+  return '<div class="it" id="sh'+id+'">'+
+    '<div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span>'+
+    '<button class="del" onclick="delShim('+id+')">×</button></div>'+
+    '</div>'
+}
+function addShim(){sid++;shims.push(sid);var d=document.createElement('div');d.innerHTML=makeShimHTML(sid);var el=d.firstElementChild;$('shim-list').appendChild(el);bindInputs(el);calc()}
+function delShim(id){var el=$('sh'+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
+
+function calc(){
+  // Plates
+  var totalPWt=0,totalPPrice=0;
+  plates.forEach(function(id){
+    var len=gv('pl'+id),wid=gv('pw'+id),thk=gv('pt'+id);
+    var hl=gv('phl'+id),hw=gv('phw'+id),hn=gi('phn'+id);
+    var up=gv('pUp'),sp=gv('pSp');
+    var grossV=len*wid*thk;
+    var holeV=(hl&&hw&&hn)?hl*hw*thk*hn:0;
+    var netV=grossV-holeV;
+    var gwt=kg(grossV),swt=kg(holeV),bwt=gwt-swt;
+    var rev=tp(swt,sp);
+    totalPWt+=bwt;
+    totalPPrice+=tp(gwt,up)-rev;
+  });
+
+  // Rebars
+  var totalRWt=0,totalRPrice=0;
+  rebars.forEach(function(id){
+    var rd=gv('rd'+id),rl=gv('rl'+id),rn=gi('rn'+id),ru=gv('rUp');
+    if(rd&&rl&&rn){
+      var vol=Math.PI*(rd/2)*(rd/2)*rl*rn;
+      var w=kg(vol);
+      totalRWt+=w;totalRPrice+=tp(w,ru);
+    }
+  });
+
+  // Shims
+  var totalSWt=0,totalSPrice=0;
+  shims.forEach(function(id){
+    var sl=gv('sl'+id),sw=gv('sw'+id),st=gv('st'+id),su=gv('sUp');
+    if(sl&&sw&&st){
+      var v=sl*sw*st;
+      var w=kg(v);
+      totalSWt+=w;totalSPrice+=tp(w,su);
+    }
+  });
+
+  // Channels
+  var totalCWt=0,totalCPrice=0;
+  channels.forEach(function(id){
+    var cl=gv('cl'+id),ck=gv('ck'+id),cn=gi('cn'+id),cu=gv('cUp');
+    if(cl&&ck&&cn){
+      var w=(cl/1000)*ck*cn;
+      totalCWt+=w;totalCPrice+=tp(w,cu);
+    }
+  });
+
+  // Welding
+  var wlen=gv('wlen');
+  var wcir=gv('wcir'),wcirn=gi('wcirn');
+  var w1Price=wlen*WELD;
+  var w2Price=Math.PI*wcir*wcirn*WELD;
+
+  // Shared
+  var fr=gv('fr'),zf=gv('zf'),dx=gv('dx');
+  var totalNet=totalPWt+totalRWt+totalSWt+totalCWt;
+  var freight=tp(totalNet,fr);
+  var fixing=tp(totalNet,zf);
+  var galvan=tp(totalNet,dx);
+  var sharedCost=freight+fixing+galvan;
+
+  var total=totalPPrice+totalRPrice+totalSPrice+totalCPrice+w1Price+w2Price+sharedCost;
+
+  $('p_wt').textContent=fmt(totalPWt);
+  $('p_price').textContent='¥'+fmt(totalPPrice);
+  $('r_wt').textContent=fmt(totalRWt);
+  $('r_price').textContent='¥'+fmt(totalRPrice);
+  $('s_wt').textContent=fmt(totalSWt);
+  $('s_price').textContent='¥'+fmt(totalSPrice);
+  $('c_wt').textContent=fmt(totalCWt);
+  $('c_price').textContent='¥'+fmt(totalCPrice);
+  $('w1_price').textContent='¥'+fmt(w1Price);
+  $('w2_price').textContent='¥'+fmt(w2Price);
+  $('shared').textContent='¥'+fmt(freight)+' / ¥'+fmt(fixing)+' / ¥'+fmt(galvan);
+  $('total').textContent='¥'+fmt(Math.max(0,total));
+}
+
+document.querySelectorAll('input').forEach(function(i){i.addEventListener('input',calc)});
+addPlate();addRebar();addChannel();addShim();
+</script>
+</body>
+</html>
