@@ -214,10 +214,16 @@ async function checkLogin(){
 
 document.getElementById("goto-admin").onclick=function(e){e.preventDefault();showAdmin();document.getElementById("admin-panel").style.display="none"}
 document.getElementById("admin-back").onclick=function(){if(getToken()){showCalc()}else{showLogin()}}
-document.getElementById("admin-login-btn").onclick=function(){
+document.getElementById("admin-login-btn").onclick=async function(){
   var ap=document.getElementById("admin-pass").value.trim();
-  if(!ap){document.getElementById("admin-msg").className="admin-err";document.getElementById("admin-msg").textContent="请输入密码";return}
-  document.getElementById("admin-panel").style.display="block";document.getElementById("admin-msg").textContent="";loadUserList(ap);window._ap=ap
+  var msg=document.getElementById("admin-msg");
+  if(!ap){msg.className="admin-err";msg.textContent="请输入密码";return}
+  try{
+    var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap})});
+    var d=await r.json();
+    if(d&&d.users){document.getElementById("admin-panel").style.display="block";msg.textContent="";loadUserList(ap);window._ap=ap}
+    else{msg.className="admin-err";msg.textContent="密码错误"}
+  }catch(e){msg.className="admin-err";msg.textContent="密码错误"}
 };
 function showMsg(m,e){var el=document.getElementById("admin-msg");el.className=e?"admin-err":"admin-msg";el.textContent=m}
 async function loadUserList(ap){
@@ -302,3 +308,4 @@ addPlate();addRebar();addChannel();addShim();checkLogin();
 </script>
 </body>
 </html>
+
