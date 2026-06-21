@@ -231,7 +231,7 @@ async function loadUserList(ap){
   try{
     var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap||window._ap})});
     var d=await r.json();
-    if(d.users){var html="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";html+="<tr><td>"+u.user+"</td><td>"+(u.on?"✅正常":"⛔禁用")+"</td><td>"+rt+"</td><td><button class='toggle-btn' onclick='toggleUser(\""+u.user+"\")'>"+(u.on?"禁用":"启用")+"</button></td></tr>"});document.getElementById("user-list").innerHTML=html}
+    if(d.users){var html="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";html+="<tr><td>"+u.user+"</td><td>"+(u.on?"✅正常":"⛔禁用")+"</td><td>"+rt+"</td><td><button class='toggle-btn' onclick='toggleUser(\""+u.user+"\")'>"+(u.on?"禁用":"启用")+"</button> <button class='toggle-btn' style='border-color:#c66;color:#c66' onclick='deleteUser("+u.user+"\")'>删除</button></td></tr>"});document.getElementById("user-list").innerHTML=html}
     else{showMsg(d.err||"加载失败",true)}
   }catch(e){showMsg("网络错误",true)}
 }
@@ -249,6 +249,11 @@ document.getElementById("create-btn").onclick=async function(){
 };
 async function toggleUser(user){
   try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();if(d.ok){showMsg(d.msg);loadUserList()}else{showMsg(d.err,true)}}catch(e){showMsg("网络错误",true)}
+
+async function deleteUser(user){
+  if(!confirm("确定删除账号 "+user+" 吗？")) return;
+  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();if(d.ok){showMsg("账号 "+user+" 已删除");loadUserList()}else{showMsg(d.err,true)}}catch(e){showMsg("网络错误",true)}
+}
 }
 
 const D=7.85,WELD=0.004;
@@ -269,7 +274,7 @@ function delRebar(id){var el=$("rb"+id);if(el)el.remove();rebars=rebars.filter(f
 function makeChannelHTML(id){return '<div class="it" id="ch'+id+'"><div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span><label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span><label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delChannel('+id+')">×</button></div></div>'}
 function addChannel(){cid++;channels.push(cid);var d=document.createElement("div");d.innerHTML=makeChannelHTML(cid);var el=d.firstElementChild;$("channel-list").appendChild(el);bindInputs(el);calc()}
 function delChannel(id){var el=$("ch"+id);if(el)el.remove();channels=channels.filter(function(x){return x!==id});calc()}
-function makeShimHTML(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span><button class="del" onclick="delShim('+id+')">×</button></div></div>'}
+function makeShimHTML(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="sq'+id+'" class="w2" type="number" step="any"><span class="unit">个</span><button class="del" onclick="delShim('+id+')">×</button></div></div>'}
 function addShim(){sid++;shims.push(sid);var d=document.createElement("div");d.innerHTML=makeShimHTML(sid);var el=d.firstElementChild;$("shim-list").appendChild(el);bindInputs(el);calc()}
 function delShim(id){var el=$("sh"+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
 
@@ -283,8 +288,8 @@ function calc(){
     if(rd&&rl&&rn){var v=Math.PI*(rd/2)*(rd/2)*rl*rn;var w=kg(v);tRW+=w;tRP+=tp(w,ru)}
   });
   var tSW=0,tSP=0;shims.forEach(function(id){
-    var sl=gv("sl"+id),sw=gv("sw"+id),st=gv("st"+id),su=gv("sUp");
-    if(sl&&sw&&st){var v=sl*sw*st;var w=kg(v);tSW+=w;tSP+=tp(w,su)}
+    var sl=gv("sl"+id),sw=gv("sw"+id),st=gv("st"+id),sq=gi("sq"+id)||1,su=gv("sUp");
+    if(sl&&sw&&st){var v=sl*sw*st*sq;var w=kg(v);tSW+=w;tSP+=tp(w,su)}
   });
   var tCW=0,tCP=0;channels.forEach(function(id){
     var cl=gv("cl"+id),ck=gv("ck"+id),cn=gi("cn"+id),cu=gv("cUp");
