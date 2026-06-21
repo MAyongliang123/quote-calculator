@@ -137,6 +137,7 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
 
 <div class="res">
 <div class="rl"><span class="label">钢板 — 总净重 / 合计</span><span><span id="p_wt">—</span> kg / <span id="p_price">—</span></span></div>
+<div class="rl"><span class="label">废料卖价（扣除）</span><span id="scrap_val">—</span></div>
 <div class="rl"><span class="label">螺纹钢 — 总重 / 合计</span><span><span id="r_wt">—</span> kg / <span id="r_price">—</span></span></div>
 <div class="rl"><span class="label">垫片 — 净重 / 金额</span><span><span id="s_wt">—</span> kg / <span id="s_price">—</span></span></div>
 <div class="rl"><span class="label">槽钢 — 总重 / 合计</span><span><span id="c_wt">—</span> kg / <span id="c_price">—</span></span></div>
@@ -273,9 +274,9 @@ function addShim(){sid++;shims.push(sid);var d=document.createElement("div");d.i
 function delShim(id){var el=$("sh"+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
 
 function calc(){
-  var tPW=0,tPP=0;plates.forEach(function(id){
+  var tPW=0,tPP=0,scrapTotal=0;plates.forEach(function(id){
     var l=gv("pl"+id),w=gv("pw"+id),t=gv("pt"+id),hl=gv("phl"+id),hw=gv("phw"+id),hn=gi("phn"+id),up=gv("pUp"),sp=gv("pSp");
-    var gv2=l*w*t,hv=(hl&&hw&&hn)?hl*hw*t*hn:0,gw=kg(gv2),sw=kg(hv);tPW+=gw-sw;tPP+=tp(gw,up)-tp(sw,sp)
+    var gv2=l*w*t,hv=(hl&&hw&&hn)?hl*hw*t*hn:0,gw=kg(gv2),sw=kg(hv);tPW+=gw-sw;tPP+=tp(gw,up)-tp(sw,sp);scrapTotal+=tp(sw,sp)
   });
   var tRW=0,tRP=0;rebars.forEach(function(id){
     var rd=gv("rd"+id),rl=gv("rl"+id),rn=gi("rn"+id),ru=gv("rUp");
@@ -302,10 +303,11 @@ function calc(){
   $("total_wt").textContent=fmt(tn);
   $("w1_price").textContent="¥"+fmt(w1);$("w2_price").textContent="¥"+fmt(w2);
   $("shared").textContent="¥"+fmt(tp(tn,fr))+" / ¥"+fmt(tp(tn,zf))+" / ¥"+fmt(tp(tn,dx));
-  $("total").textContent="¥"+fmt(Math.max(0,tot))
+  $("scrap_val").textContent="¥"+fmt(scrapTotal);$("total").textContent="¥"+fmt(Math.max(0,tot))
 }
-addPlate();addRebar();addChannel();addShim();checkLogin();
+document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",calc)});addPlate();addRebar();addChannel();addShim();checkLogin();
 </script>
 </body>
 </html>
+
 
