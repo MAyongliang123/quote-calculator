@@ -19,7 +19,11 @@ h2{font-size:15px;margin-bottom:12px;text-align:center;color:#333}
 #login-page .login-btn{width:100%;padding:10px;background:#4488cc;color:#fff;border:none;border-radius:4px;font-size:15px;cursor:pointer}
 #login-page .login-btn:active{background:#3670b0}
 #login-page .error-msg{color:#c0392b;font-size:12px;text-align:center;margin:8px 0;display:none}
-#login-page .login-hint{text-align:center;font-size:11px;color:#999;margin-top:12px}
+#login-page .login-btn-wrap{display:flex;align-items:center;gap:10px}
+.login-btn-wrap .login-btn{flex:1}
+.spinner{display:none;width:22px;height:22px;border:2.5px solid #ddd;border-top-color:#4488cc;border-radius:50%;animation:sp .6s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+.login-hint{text-align:center;font-size:11px;color:#999;margin-top:12px}
 #login-page .admin-link{text-align:center;margin-top:20px}
 #login-page .admin-link a{font-size:11px;color:#bbb;text-decoration:none}
 
@@ -89,7 +93,8 @@ h2{font-size:15px;margin-bottom:12px;text-align:center;color:#333}
     <div class="form-group"><input id="login-user" type="text" placeholder="用户名"></div>
     <div class="form-group"><input id="login-pass" type="password" placeholder="密码"></div>
     <div class="error-msg" id="login-err"></div>
-    <button class="login-btn" id="login-btn">登 录</button>
+    <div class="login-btn-wrap"><button class="login-btn" id="login-btn">登 录</button><div class="spinner" id="login-spinner"></div></div>
+    
     <div class="admin-link"><a id="goto-admin" href="#">管理登录</a></div>
 </div>
 
@@ -103,19 +108,23 @@ h2{font-size:15px;margin-bottom:12px;text-align:center;color:#333}
 
     <!-- 报价计算器正文 -->
     <div class="sec">
-    <div class="sec-h">钢板 <span class="hdrl">铁价</span><input id="pUp" class="hdr" type="number" step="any"><span class="hdrl">废料</span><input id="pSp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addPlate()">+</button></div>
+    <div class="sec-h">钢板 <span class="hdrl">铁价</span><input id="pUp" class="hdr" type="number" step="any"><span class="hdrl">废料</span><input id="pSp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addPlate()">+</button>
+    </div>
     <div class="sec-b" id="plate-list"></div>
     </div>
     <div class="sec">
-    <div class="sec-h">螺纹钢 <span class="hdrl">吨价</span><input id="rUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addRebar()">+</button></div>
+    <div class="sec-h">螺纹钢 <span class="hdrl">吨价</span><input id="rUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addRebar()">+</button>
+    </div>
     <div class="sec-b" id="rebar-list"></div>
     </div>
     <div class="sec">
-    <div class="sec-h">垫片 <span class="hdrl">铁价</span><input id="sUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addShim()">+</button></div>
+    <div class="sec-h">垫片 <span class="hdrl">铁价</span><input id="sUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addShim()">+</button>
+    </div>
     <div class="sec-b" id="shim-list"></div>
     </div>
     <div class="sec">
-    <div class="sec-h">槽钢 <span class="hdrl">吨价</span><input id="cUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addChannel()">+</button></div>
+    <div class="sec-h">槽钢 <span class="hdrl">吨价</span><input id="cUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addChannel()">+</button>
+    </div>
     <div class="sec-b" id="channel-list"></div>
     </div>
     <div class="sec">
@@ -154,6 +163,7 @@ h2{font-size:15px;margin-bottom:12px;text-align:center;color:#333}
     <h3>管理员登录</h3>
     <div class="form-group"><input id="admin-pass" type="password" placeholder="管理员密码"></div>
     <button class="admin-btn" id="admin-login-btn">登录管理</button>
+    
     <div id="admin-panel" style="display:none;margin-top:15px">
         <h3>创建账号</h3>
         <div class="form-group"><input id="new-user" type="text" placeholder="用户名"></div>
@@ -168,6 +178,7 @@ h2{font-size:15px;margin-bottom:12px;text-align:center;color:#333}
             </select>
         </div>
         <button class="admin-btn" id="create-btn">创建</button>
+    
         <div id="admin-msg" class="admin-msg"></div>
         <h3 style="margin-top:15px">用户列表</h3>
         <table class="user-table"><thead><tr><th>用户名</th><th>状态</th><th>剩余天数</th><th>操作</th></tr></thead><tbody id="user-list"></tbody></table>
@@ -197,12 +208,13 @@ document.getElementById("login-btn").onclick=async function(){
     var p=document.getElementById("login-pass").value.trim();
     var err=document.getElementById("login-err");
     if(!u||!p){err.textContent="请输入用户名和密码";err.style.display="block";return}
+    document.getElementById("login-spinner").style.display="block";document.getElementById("login-btn").disabled=true
     try{
         var r=await fetch(API+"/login",{method:"POST",body:JSON.stringify({u:u,p:p})});
         var d=await r.json();
-        if(d.ok){setToken(d.token);document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days+"天";showCalc();calc();err.style.display="none"}
-        else{err.textContent=d.err;err.style.display="block"}
-    }catch(e){err.textContent="网络错误，请检查网络";err.style.display="block"}
+        if(d.ok){document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;setToken(d.token);document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";showCalc();calc();err.style.display="none"}
+        else{document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;err.textContent=d.err;err.style.display="block"}
+    }catch(e){document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;err.textContent="网络错误，请检查网络";err.style.display="block"}
 };
 document.getElementById("login-pass").onkeydown=function(e){if(e.key=="Enter")document.getElementById("login-btn").click()};
 document.getElementById("login-user").onkeydown=function(e){if(e.key=="Enter")document.getElementById("login-pass").focus()};
@@ -217,14 +229,14 @@ async function checkLogin(){
     try{
         var r=await fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:token})});
         var d=await r.json();
-        if(d.ok){document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days+"天";showCalc();calc()}
+        if(d.ok){document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";showCalc();calc()}
         else{delToken();showLogin()}
     }catch(e){showLogin()}
 }
 
 // ====== 管理页面 ======
 document.getElementById("goto-admin").onclick=function(e){e.preventDefault();showAdmin();document.getElementById("admin-panel").style.display="none"}
-document.getElementById("admin-back").onclick=function(){showLogin()}
+document.getElementById("admin-back").onclick=function(){if(getToken()){showCalc()}else{showLogin()}}
 
 document.getElementById("admin-login-btn").onclick=function(){
     var ap=document.getElementById("admin-pass").value.trim();
@@ -242,7 +254,8 @@ async function loadUserList(ap){
         if(d.users){
             var html="";
             d.users.forEach(function(u){
-                html+="<tr><td>"+u.user+"</td><td>"+(u.on?"✅正常":"⛔禁用")+"</td><td>"+u.remain+"天</td><td><button class='toggle-btn' onclick='toggleUser(\""+u.user+"\")'>"+(u.on?"禁用":"启用")+"</button></td></tr>"
+                html+="<tr><td>"+u.user+"</td><td>"+(u.on?"✅正常":"⛔禁用")+"</td><td>"+(u.remain>=99999?"永久":u.remain+"天")+"</td><td><button class='toggle-btn' onclick='toggleUser(\""+u.user+"\")'>"+(u.on?"禁用":"启用")+"</button>
+    </td></tr>"
             });
             document.getElementById("user-list").innerHTML=html
         }else{showMsg(d.err||"加载失败",true)}
@@ -282,17 +295,21 @@ function gi(id){return parseInt($(id).value)||0}
 function kg(mm3){return mm3/1e3*D/1e3}
 function tp(kg,up){return kg/1e3*up}
 function bindInputs(el){el.querySelectorAll("input").forEach(function(i){i.addEventListener("input",calc)})}
-function makePlateHTML(id){return '<div class="it" id="p'+id+'"><div class="toprow"><div class="half"><div class="r2"><b>长</b><input id="pl'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>宽</b><input id="pw'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>厚</b><input id="pt'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div></div><div class="half r"><div class="r2"><label>孔长</label><input id="phl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>孔宽</label><input id="phw'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>数量</label><input id="phn'+id+'" class="w2" type="number" step="any"><span class="unit">个</span></div></div></div><div class="r2" style="margin:4px 0 0;justify-content:flex-end"><button class="del" onclick="delPlate('+id+')">×</button></div></div>'}
-function addPlate(){pid++;plates.push(pid);var d=document.createElement("div");d.innerHTML=makePlateHTML(pid);$("plate-list").appendChild(d.firstElementChild);bindInputs(d);calc()}
+function makePlateHTML(id){return '<div class="it" id="p'+id+'"><div class="toprow"><div class="half"><div class="r2"><b>长</b><input id="pl'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>宽</b><input id="pw'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>厚</b><input id="pt'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div></div><div class="half r"><div class="r2"><label>孔长</label><input id="phl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>孔宽</label><input id="phw'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>数量</label><input id="phn'+id+'" class="w2" type="number" step="any"><span class="unit">个</span></div></div></div><div class="r2" style="margin:4px 0 0;justify-content:flex-end"><button class="del" onclick="delPlate('+id+')">×</button>
+    </div></div>'}
+function addPlate(){pid++;plates.push(pid);var d=document.createElement("div");d.innerHTML=makePlateHTML(pid);var el=d.firstElementChild;$("plate-list").appendChild(el);bindInputs(el);calc()}
 function delPlate(id){var el=$("p"+id);if(el)el.remove();plates=plates.filter(function(x){return x!==id});calc()}
-function makeRebarHTML(id){return '<div class="it" id="rb'+id+'"><div class="r2"><label>直径</label><input id="rd'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>长度</label><input id="rl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>数量</label><input id="rn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delRebar('+id+')">×</button></div></div>'}
-function addRebar(){rid++;rebars.push(rid);var d=document.createElement("div");d.innerHTML=makeRebarHTML(rid);$("rebar-list").appendChild(d.firstElementChild);bindInputs(d);calc()}
+function makeRebarHTML(id){return '<div class="it" id="rb'+id+'"><div class="r2"><label>直径</label><input id="rd'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>长度</label><input id="rl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>数量</label><input id="rn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delRebar('+id+')">×</button>
+    </div></div>'}
+function addRebar(){rid++;rebars.push(rid);var d=document.createElement("div");d.innerHTML=makeRebarHTML(rid);var el=d.firstElementChild;$("rebar-list").appendChild(el);bindInputs(el);calc()}
 function delRebar(id){var el=$("rb"+id);if(el)el.remove();rebars=rebars.filter(function(x){return x!==id});calc()}
-function makeChannelHTML(id){return '<div class="it" id="ch'+id+'"><div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span><label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span><label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delChannel('+id+')">×</button></div></div>'}
-function addChannel(){cid++;channels.push(cid);var d=document.createElement("div");d.innerHTML=makeChannelHTML(cid);$("channel-list").appendChild(d.firstElementChild);bindInputs(d);calc()}
+function makeChannelHTML(id){return '<div class="it" id="ch'+id+'"><div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span><label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span><label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delChannel('+id+')">×</button>
+    </div></div>'}
+function addChannel(){cid++;channels.push(cid);var d=document.createElement("div");d.innerHTML=makeChannelHTML(cid);var el=d.firstElementChild;$("channel-list").appendChild(el);bindInputs(el);calc()}
 function delChannel(id){var el=$("ch"+id);if(el)el.remove();channels=channels.filter(function(x){return x!==id});calc()}
-function makeShimHTML(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span><button class="del" onclick="delShim('+id+')">×</button></div></div>'}
-function addShim(){sid++;shims.push(sid);var d=document.createElement("div");d.innerHTML=makeShimHTML(sid);$("shim-list").appendChild(d.firstElementChild);bindInputs(d);calc()}
+function makeShimHTML(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span><button class="del" onclick="delShim('+id+')">×</button>
+    </div></div>'}
+function addShim(){sid++;shims.push(sid);var d=document.createElement("div");d.innerHTML=makeShimHTML(sid);var el=d.firstElementChild;$("shim-list").appendChild(el);bindInputs(el);calc()}
 function delShim(id){var el=$("sh"+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
 
 function calc(){
@@ -343,6 +360,12 @@ checkLogin();
 </script>
 </body>
 </html>
+
+
+
+
+
+
 
 
 
