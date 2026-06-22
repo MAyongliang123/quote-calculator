@@ -114,7 +114,6 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
     <table class="user-table"><thead><tr><th>用户名</th><th>状态</th><th>剩余</th><th>操作</th></tr></thead><tbody id="user-list"></tbody></table>
     <a class="back-link" id="admin-back">← 返回报价</a>
   </div></div></div>
-  </div></div></div>
 
 <script>
 var API="https://1445439860-dk7regmeb9.ap-guangzhou.tencentscf.com";
@@ -176,11 +175,10 @@ document.getElementById("create-btn").onclick=async function(){
   }catch(e){sm("网络错误",true)}
 };
 async function tu(btn,user){btn.disabled=true;btn.textContent="处理中...";var t0=Date.now();
-  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm(d.msg+" (耗时"+(t1-t0)+"ms)");lu()}else{sm(d.err,true)}}catch(e){sm("网络错误",true)}
+  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){btn.disabled=false;btn.textContent=d.msg.indexOf("禁用")>=0?"启用":"禁用";sm(d.msg+" (耗时"+(t1-t0)+"ms)")}else{btn.disabled=false;btn.textContent="重试";sm(d.err,true)}}catch(e){btn.disabled=false;btn.textContent="重试";sm("网络错误",true)}
 }
-async function du(btn,user){btn.disabled=true;btn.textContent="删除中...";if(!confirm("确定永久删除账号 "+user+" 吗？")){btn.disabled=false;btn.textContent="删除";return}
-  if(!confirm("确定永久删除账号 "+user+" 吗？")) return;var t0=Date.now();
-  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm("账号 "+user+" 已删除 (耗时"+(t1-t0)+"ms)");lu()}else{sm(d.err,true)}}catch(e){sm("网络错误",true)}
+async function du(btn,user){if(!confirm("确定永久删除账号 "+user+" 吗？")) return;btn.disabled=true;btn.textContent="删除中...";var t0=Date.now();
+  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){btn.textContent="已删";sm("账号 "+user+" 已删除 (耗时"+(t1-t0)+"ms)")}else{btn.disabled=false;btn.textContent="重试";sm(d.err,true)}}catch(e){btn.disabled=false;btn.textContent="重试";sm("网络错误",true)}
 }
 
 const D=7.85;var pid=0,rid=0,cid=0,sid=0,plates=[],rebars=[],channels=[],shims=[];
@@ -237,10 +235,12 @@ function calc(){
   $("scrap_val").textContent="¥"+fmt(st);$("total").textContent="¥"+fmt(Math.max(0,tot))
 }
 document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})});aP();aR();aS();aC();cl();
-window.addEventListener("hashchange",function(){cl()});setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},300000);
+window.addEventListener("hashchange",function(){cl()});setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},30000);
 </script>
 </body>
 </html>
+
+
 
 
 
