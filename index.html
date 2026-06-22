@@ -1,38 +1,5 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>国平智能制造报价</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32px;font:14px/1.4 system-ui,-apple-system,sans-serif}
-.card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:14px 12px 16px;max-width:520px;width:100%}
-
-/* 登录页 */
-#login-page{display:block}
-#login-page .logo{text-align:center;margin:30px 0 20px;font-size:20px;font-weight:700;color:#333}
-#login-page .form-group{margin-bottom:14px}
-#login-page .form-group input{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:4px;font-size:15px;outline:none;box-sizing:border-box}
-#login-page .form-group input:focus{border-color:#4488cc}
-.login-btn-wrap{display:flex;align-items:center;gap:10px}.login-btn-wrap .login-btn{flex:1}
-#login-page .login-btn{width:100%;padding:10px;background:#4488cc;color:#fff;border:none;border-radius:4px;font-size:15px;cursor:pointer}
-#login-page .login-btn:active{background:#3670b0}#login-page .login-btn:disabled{opacity:.6;cursor:not-allowed}
-#login-page .error-msg{color:#c0392b;font-size:12px;text-align:center;margin:8px 0;display:none}
-#login-page .admin-link{text-align:center;margin-top:20px}
-#login-page .admin-link a{font-size:11px;color:#bbb;text-decoration:none;cursor:pointer}
-.spinner{display:none;width:22px;height:22px;border:2.5px solid #ddd;border-top-color:#4488cc;border-radius:50%;animation:sp .6s linear infinite;flex-shrink:0}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-/* 计算器页 */
-#calc-page{display:none}
-#calc-page .user-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:6px 0;border-bottom:1px solid #eee;font-size:12px;color:#666}
-#calc-page .user-bar .logout{color:#4488cc;cursor:pointer;text-decoration:none}
-#calc-page .user-bar .days{color:#e67e22}
-
-/* 管理员页 */
-#admin-page{display:none}
-#admin-page h3{font-size:14px;color:#333;margin:12px 0 10px}
+[output truncated]
+-page h3{font-size:14px;color:#333;margin:12px 0 10px}
 #admin-page .form-group{margin-bottom:10px}
 #admin-page .form-group input,#admin-page .form-group select{width:100%;padding:8px;border:1px solid #ccc;border-radius:3px;font-size:13px;outline:none;box-sizing:border-box}
 #admin-page .admin-btn{padding:8px 18px;background:#4488cc;color:#fff;border:none;border-radius:3px;font-size:13px;cursor:pointer}
@@ -43,8 +10,6 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
 #admin-page .user-table th{background:#f5f5f5}
 #admin-page .user-table .toggle-btn{padding:3px 10px;border:1px solid #4488cc;border-radius:3px;background:#fff;color:#4488cc;cursor:pointer;font-size:11px}
 #admin-page .back-link{display:block;margin-top:15px;font-size:12px;color:#4488cc;text-decoration:none;cursor:pointer}
-
-/* 报价计算器通用样式 */
 .sec{border:1px solid #e8e8e8;border-radius:6px;margin-bottom:10px;overflow:hidden}
 .sec-h{background:#fafafa;padding:7px 10px;font-size:13px;font-weight:600;color:#555;display:flex;justify-content:space-between;align-items:center}
 .sec-h .add{width:26px;height:26px;border:1px solid #4488cc;border-radius:4px;background:#fff;font-size:18px;line-height:1;cursor:pointer;color:#4488cc;text-align:center;padding:0;flex-shrink:0}
@@ -70,86 +35,45 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
 .note{font-size:10px;color:#aaa;margin-top:2px}.sub{font-size:11px;color:#888;margin-bottom:4px}
 .hdr{width:50px;flex:none;padding:4px 2px;border:1px solid #ccc;border-radius:3px;font-size:12px;text-align:center;outline:none;background:#fff;margin:0 2px}
 .hdrl{font-size:10px;color:#999;font-weight:400;margin-right:1px}
-
-/* 共用费用单行布局 */
 .shared-row{display:flex;gap:8px;align-items:center}
 .shared-row .r2{flex:1;margin:0!important}
 </style>
 </head>
 <body>
 <div class="card">
-
-<!-- ====== 登录页 ====== -->
 <div id="login-page">
   <div class="logo">📐 国平智能制造报价</div>
   <div class="form-group"><input id="login-user" type="text" placeholder="用户名"></div>
   <div class="form-group"><input id="login-pass" type="password" placeholder="密码"></div>
   <div class="error-msg" id="login-err"></div>
   <div class="login-btn-wrap"><button class="login-btn" id="login-btn">登 录</button><div class="spinner" id="login-spinner"></div></div>
-  <div class="admin-link"><a id="goto-admin" href="#">管理登录</a></div>
 </div>
 
-<!-- ====== 报价计算器页 ====== -->
 <div id="calc-page">
 <div class="user-bar"><span>用户：<strong id="disp-user"></strong></span><span>剩余：<span class="days" id="disp-days"></span></span><a class="logout" id="logout-btn">退出登录</a></div>
-
+<div class="sec"><div class="sec-h">钢板 <span class="hdrl">铁价</span><input id="pUp" class="hdr" type="number" step="any"><span class="hdrl">废料</span><input id="pSp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addPlate()">+</button></div><div class="sec-b" id="plate-list"></div></div>
+<div class="sec"><div class="sec-h">螺纹钢 <span class="hdrl">吨价</span><input id="rUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addRebar()">+</button></div><div class="sec-b" id="rebar-list"></div></div>
+<div class="sec"><div class="sec-h">垫片 <span class="hdrl">铁价</span><input id="sUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addShim()">+</button></div><div class="sec-b" id="shim-list"></div></div>
+<div class="sec"><div class="sec-h">槽钢 <span class="hdrl">吨价</span><input id="cUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addChannel()">+</button></div><div class="sec-b" id="channel-list"></div></div>
 <div class="sec">
-<div class="sec-h">钢板 <span class="hdrl">铁价</span><input id="pUp" class="hdr" type="number" step="any"><span class="hdrl">废料</span><input id="pSp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addPlate()">+</button></div>
-<div class="sec-b" id="plate-list"></div>
-</div>
-
-<div class="sec">
-<div class="sec-h">螺纹钢 <span class="hdrl">吨价</span><input id="rUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addRebar()">+</button></div>
-<div class="sec-b" id="rebar-list"></div>
-</div>
-
-<div class="sec">
-<div class="sec-h">垫片 <span class="hdrl">铁价</span><input id="sUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addShim()">+</button></div>
-<div class="sec-b" id="shim-list"></div>
-</div>
-
-<div class="sec">
-<div class="sec-h">槽钢 <span class="hdrl">吨价</span><input id="cUp" class="hdr" type="number" step="any"><span class="hdrl">元/吨</span><button class="add" onclick="addChannel()">+</button></div>
-<div class="sec-b" id="channel-list"></div>
-</div>
-
-<div class="sec">
-<div class="sec-h">电焊</div>
+<div class="sec-h">电焊 <span class="hdrl">单价</span><input id="wUp" class="hdr" type="number" step="any" value="0.4"><span class="hdrl">分/mm</span></div>
 <div class="sec-b">
-<div class="sub">直线焊</div>
-<div class="r2"><label>长度</label><input id="wlen" class="w3" type="number" step="any"><span class="unit">mm</span></div>
-<div class="sub">圈焊</div>
-<div class="r2"><label>直径</label><input id="wcir" class="w2" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="wcirn" class="w2" type="number" step="any"><span class="unit">个</span></div>
-<div class="note">* 自动计价 0.004 元/mm</div>
-</div>
-</div>
-
-<div class="sec">
-<div class="sec-h">共用费用（按总净重计算）</div>
-<div class="sec-b">
-<div class="shared-row">
-<div class="r2"><label>运费</label><input id="fr" type="number" step="any"><span class="unit">元/吨</span></div>
-<div class="r2"><label>整理</label><input id="zf" type="number" step="any"><span class="unit">元/吨</span></div>
-<div class="r2"><label>镀锌</label><input id="dx" type="number" step="any"><span class="unit">元/吨</span></div>
-</div>
-</div>
-</div>
-
+<div class="sub">直线焊</div><div class="r2"><label>长度</label><input id="wlen" class="w3" type="number" step="any"><span class="unit">mm</span></div>
+<div class="sub">圈焊</div><div class="r2"><label>直径</label><input id="wcir" class="w2" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="wcirn" class="w2" type="number" step="any"><span class="unit">个</span></div>
+<div class="note">* 默认 0.4 分/mm，可调整</div>
+</div></div>
+<div class="sec"><div class="sec-h">共用费用（按总净重计算）</div><div class="sec-b"><div class="shared-row"><div class="r2"><label>运费</label><input id="fr" type="number" step="any"><span class="unit">元/吨</span></div><div class="r2"><label>整理</label><input id="zf" type="number" step="any"><span class="unit">元/吨</span></div><div class="r2"><label>镀锌</label><input id="dx" type="number" step="any"><span class="unit">元/吨</span></div></div></div></div>
 <div class="res">
-<div class="rl"><span class="label">钢板 — 总净重 / 合计</span><span><span id="p_wt">—</span> kg / <span id="p_price">—</span></span></div>
-<div class="rl"><span class="label">废料卖价（扣除）</span><span id="scrap_val">—</span></div>
-<div class="rl"><span class="label">螺纹钢 — 总重 / 合计</span><span><span id="r_wt">—</span> kg / <span id="r_price">—</span></span></div>
-<div class="rl"><span class="label">垫片 — 净重 / 金额</span><span><span id="s_wt">—</span> kg / <span id="s_price">—</span></span></div>
-<div class="rl"><span class="label">槽钢 — 总重 / 合计</span><span><span id="c_wt">—</span> kg / <span id="c_price">—</span></span></div>
-<div class="rl"><span class="label">焊接件总重</span><span><span id="total_wt">—</span> kg</span></div>
-<div class="rl"><span class="label">电焊 — 直线 / 圈焊</span><span><span id="w1_price">—</span> / <span id="w2_price">—</span></span></div>
-<div class="rl"><span class="label">运费 / 整理 / 镀锌</span><span id="shared">—</span></div>
-</div>
+<div class="rl"><span class="label">钢板 — 总净重 / 合计</span><span><span id="p_wt">-</span> kg / <span id="p_price">-</span></span></div>
+<div class="rl"><span class="label">废料卖价（扣除）</span><span id="scrap_val">-</span></div>
+<div class="rl"><span class="label">螺纹钢 — 总重 / 合计</span><span><span id="r_wt">-</span> kg / <span id="r_price">-</span></span></div>
+<div class="rl"><span class="label">垫片 — 净重 / 金额</span><span><span id="s_wt">-</span> kg / <span id="s_price">-</span></span></div>
+<div class="rl"><span class="label">槽钢 — 总重 / 合计</span><span><span id="c_wt">-</span> kg / <span id="c_price">-</span></span></div>
+<div class="rl"><span class="label">焊接件总重</span><span><span id="total_wt">-</span> kg</span></div>
+<div class="rl"><span class="label">电焊 — 直线 / 圈焊</span><span><span id="w1_price">-</span> / <span id="w2_price">-</span></span></div>
+<div class="rl"><span class="label">运费 / 整理 / 镀锌</span><span id="shared">-</span></div></div>
+<div class="total"><span>净价</span><span id="total">¥0.00</span></div></div>
 
-<div class="total"><span>净价</span><span id="total">¥0.00</span></div>
-</div>
-
-<!-- ====== 管理员页（在 card 内部）====== -->
 <div id="admin-page">
   <h3>管理员登录</h3>
   <div class="form-group"><input id="admin-pass" type="password" placeholder="管理员密码"></div>
@@ -158,145 +82,120 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
     <h3>创建账号</h3>
     <div class="form-group"><input id="new-user" type="text" placeholder="用户名"></div>
     <div class="form-group"><input id="new-pass" type="text" placeholder="密码"></div>
-    <div class="form-group">
-      <select id="new-days">
-        <option value="7">7 天</option>
-        <option value="30" selected>30 天</option>
-        <option value="90">90 天</option>
-        <option value="365">365 天</option>
-        <option value="99999">永久</option>
-      </select>
-    </div>
+    <div class="form-group"><select id="new-days"><option value="7">7 天</option><option value="30" selected>30 天</option><option value="90">90 天</option><option value="365">365 天</option><option value="99999">永久</option></select></div>
     <button class="admin-btn" id="create-btn">创建</button>
     <div id="admin-msg" class="admin-msg"></div>
     <h3 style="margin-top:15px">用户列表</h3>
     <table class="user-table"><thead><tr><th>用户名</th><th>状态</th><th>剩余</th><th>操作</th></tr></thead><tbody id="user-list"></tbody></table>
     <a class="back-link" id="admin-back">← 返回报价</a>
-  </div>
-</div>
-
-</div>
+  </div></div></div>
 
 <script>
 var API="https://1445439860-dk7regmeb9.ap-guangzhou.tencentscf.com";
-function getToken(){return localStorage.getItem("qt")}
-function setToken(t){localStorage.setItem("qt",t)}
-function delToken(){localStorage.removeItem("qt")}
-function showLogin(){document.getElementById("login-page").style.display="block";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="none"}
-function showCalc(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="block";document.getElementById("admin-page").style.display="none"}
-function showAdmin(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="block"}
+function gt(){return localStorage.getItem("qt")}
+function st(t){localStorage.setItem("qt",t)}
+function dt(){localStorage.removeItem("qt")}
+function sl(){document.getElementById("login-page").style.display="block";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="none"}
+function sc(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="block";document.getElementById("admin-page").style.display="none"}
+function sa(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="block"}
 
 document.getElementById("login-btn").onclick=async function(){
-  var u=document.getElementById("login-user").value.trim();
-  var p=document.getElementById("login-pass").value.trim();
-  var err=document.getElementById("login-err");
-  if(!u||!p){err.textContent="请输入用户名和密码";err.style.display="block";return}
-  err.style.display="none";document.getElementById("login-spinner").style.display="block";document.getElementById("login-btn").disabled=true;
-  try{
-    var r=await fetch(API+"/login",{method:"POST",body:JSON.stringify({u:u,p:p})});
-    var d=await r.json();
-    document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;
-    if(d.ok){setToken(d.token);document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";showCalc();calc()}
-    else{err.textContent=d.err;err.style.display="block"}
-  }catch(e){document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;err.textContent="网络错误";err.style.display="block"}
+  var u=document.getElementById("login-user").value.trim(),p=document.getElementById("login-pass").value.trim(),e=document.getElementById("login-err");
+  if(!u||!p){e.textContent="请输入用户名和密码";e.style.display="block";return}
+  e.style.display="none";document.getElementById("login-spinner").style.display="block";document.getElementById("login-btn").disabled=true;
+  try{var r=await fetch(API+"/login",{method:"POST",body:JSON.stringify({u:u,p:p})});var d=await r.json();document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;
+    if(d.ok){st(d.token);document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";sc();calc()}
+    else{e.textContent=d.err;e.style.display="block"}
+  }catch(e){document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;e.textContent="网络错误";e.style.display="block"}
 };
 document.getElementById("login-pass").onkeydown=function(e){if(e.key=="Enter")document.getElementById("login-btn").click()};
-document.getElementById("logout-btn").onclick=function(){delToken();showLogin()};
+document.getElementById("logout-btn").onclick=function(){dt();sl()};
 
-async function checkLogin(){
-  var t=getToken();if(!t){showLogin();return}
-  try{
-    var r=await fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:t})});
-    var d=await r.json();
-    if(d.ok){document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";showCalc();calc()}
-    else{delToken();showLogin()}
-  }catch(e){showLogin()}
+async function cl(){
+  var t=gt();
+  if(window.location.hash==="#admin"&&!t){sa();document.getElementById("admin-panel").style.display="none";return}
+  if(!t){sl();return}
+  try{var r=await fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:t})});var d=await r.json();
+    if(d.ok){document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";sc();calc()}
+    else{dt();window.location.hash="";sl()}
+  }catch(e){sl()}
 }
 
-document.getElementById("goto-admin").onclick=function(e){e.preventDefault();showAdmin();document.getElementById("admin-panel").style.display="none"}
-document.getElementById("admin-back").onclick=function(){if(getToken()){showCalc()}else{showLogin()}}
+document.getElementById("admin-back").onclick=function(){if(gt()){sc()}else{window.location.hash="";sl()}}
 document.getElementById("admin-login-btn").onclick=async function(){
-  var ap=document.getElementById("admin-pass").value.trim();
-  var msg=document.getElementById("admin-msg");
-  if(!ap){msg.className="admin-err";msg.textContent="请输入密码";return}
-  try{
-    var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap})});
-    var d=await r.json();
-    if(d&&d.users){document.getElementById("admin-panel").style.display="block";msg.textContent="";loadUserList(ap);window._ap=ap}
-    else{msg.className="admin-err";msg.textContent="密码错误"}
-  }catch(e){msg.className="admin-err";msg.textContent="密码错误"}
+  var ap=document.getElementById("admin-pass").value.trim(),m=document.getElementById("admin-msg"),t0=Date.now();
+  if(!ap){m.className="admin-err";m.textContent="请输入密码";return}
+  document.getElementById("admin-msg").className="admin-msg";document.getElementById("admin-msg").textContent="验证中...";
+  try{var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap})});var d=await r.json();var t1=Date.now();
+    if(d&&d.users){document.getElementById("admin-panel").style.display="block";m.textContent="";lu(ap);window._ap=ap}
+    else{m.className="admin-err";m.textContent="密码错误 (耗时"+(t1-t0)+"ms)"}
+  }catch(e){m.className="admin-err";m.textContent="连接失败"}
 };
-function showMsg(m,e){var el=document.getElementById("admin-msg");el.className=e?"admin-err":"admin-msg";el.textContent=m}
-async function loadUserList(ap){
-  try{
-    var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap||window._ap})});
-    var d=await r.json();
-    if(d.users){var html="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";html+="<tr><td>"+u.user+"</td><td>"+(u.on?"✅正常":"⛔禁用")+"</td><td>"+rt+"</td><td><button class='toggle-btn' onclick='toggleUser(\""+u.user+"\")'>"+(u.on?"禁用":"启用")+"</button> <button class='toggle-btn' style='border-color:#c66;color:#c66' onclick='deleteUser("+u.user+"\")'>删除</button></td></tr>"});document.getElementById("user-list").innerHTML=html}
-    else{showMsg(d.err||"加载失败",true)}
-  }catch(e){showMsg("网络错误",true)}
+function sm(m,e){var el=document.getElementById("admin-msg");el.className=e?"admin-err":"admin-msg";el.textContent=m}
+
+async function lu(ap){
+  document.getElementById("admin-msg").textContent="加载中...";var t0=Date.now();
+  try{var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap||window._ap})});var d=await r.json();var t1=Date.now();
+    if(d.users){var h="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";h+='<tr><td>'+u.user+'</td><td>'+(u.on?"正常":"禁用")+'</td><td>'+rt+'</td><td><button class="toggle-btn" onclick="tu(\''+u.user+'\')">'+(u.on?"禁用":"启用")+'</button> <button class="toggle-btn" style="border-color:#c66;color:#c66" onclick="du(\''+u.user+'\')">删除</button></td></tr>'});document.getElementById("user-list").innerHTML=h;document.getElementById("admin-msg").textContent="完成 (耗时"+(t1-t0)+"ms)"}
+    else{sm(d.err||"加载失败",true)}
+  }catch(e){sm("网络错误",true)}
 }
 document.getElementById("create-btn").onclick=async function(){
-  var u=document.getElementById("new-user").value.trim();
-  var p=document.getElementById("new-pass").value.trim();
-  var d=document.getElementById("new-days").value;
-  if(!u||!p){showMsg("请填完整信息",true);return}
-  try{
-    var r=await fetch(API+"/admin/create",{method:"POST",body:JSON.stringify({u:u,p:p,d:parseInt(d),ap:window._ap})});
-    var res=await r.json();
-    if(res.ok){showMsg(res.msg);document.getElementById("new-user").value="";document.getElementById("new-pass").value="";loadUserList()}
-    else{showMsg(res.err,true)}
-  }catch(e){showMsg("网络错误",true)}
+  var u=document.getElementById("new-user").value.trim(),p=document.getElementById("new-pass").value.trim(),d=document.getElementById("new-days").value;
+  if(!u||!p){sm("请填完整信息",true);return}
+  try{var r=await fetch(API+"/admin/create",{method:"POST",body:JSON.stringify({u:u,p:p,d:parseInt(d),ap:window._ap})});var res=await r.json();
+    if(res.ok){sm(res.msg);document.getElementById("new-user").value="";document.getElementById("new-pass").value="";lu()}
+    else{sm(res.err,true)}
+  }catch(e){sm("网络错误",true)}
 };
-async function toggleUser(user){
-  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();if(d.ok){showMsg(d.msg);loadUserList()}else{showMsg(d.err,true)}}catch(e){showMsg("网络错误",true)}
-
-async function deleteUser(user){
-  if(!confirm("确定删除账号 "+user+" 吗？")) return;
-  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();if(d.ok){showMsg("账号 "+user+" 已删除");loadUserList()}else{showMsg(d.err,true)}}catch(e){showMsg("网络错误",true)}
+async function tu(user){var t0=Date.now();
+  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm(d.msg+" (耗时"+(t1-t0)+"ms)");lu()}else{sm(d.err,true)}}catch(e){sm("网络错误",true)}
 }
+async function du(user){
+  if(!confirm("确定永久删除账号 "+user+" 吗？")) return;var t0=Date.now();
+  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm("账号 "+user+" 已删除 (耗时"+(t1-t0)+"ms)");lu()}else{sm(d.err,true)}}catch(e){sm("网络错误",true)}
 }
 
-const D=7.85,WELD=0.004;
-var pid=0,rid=0,cid=0,sid=0,plates=[],rebars=[],channels=[],shims=[];
-function fmt(n){return n!==null&&isFinite(n)?n.toFixed(2):"—"}
+const D=7.85;var pid=0,rid=0,cid=0,sid=0,plates=[],rebars=[],channels=[],shims=[];
+function fmt(n){return n!==null&&isFinite(n)?n.toFixed(2):"-"}
 function $(id){return document.getElementById(id)}
 function gv(id){return parseFloat($(id).value)||0}
 function gi(id){return parseInt($(id).value)||0}
 function kg(m){return m/1e3*D/1e3}
 function tp(k,u){return k/1e3*u}
-function bindInputs(el){el.querySelectorAll("input").forEach(function(i){i.addEventListener("input",calc)})}
-function makePlateHTML(id){return '<div class="it" id="p'+id+'"><div class="toprow"><div class="half"><div class="r2"><b>长</b><input id="pl'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>宽</b><input id="pw'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>厚</b><input id="pt'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div></div><div class="half r"><div class="r2"><label>孔长</label><input id="phl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>孔宽</label><input id="phw'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>数量</label><input id="phn'+id+'" class="w2" type="number" step="any"><span class="unit">个</span></div></div></div><div class="r2" style="margin:4px 0 0;justify-content:flex-end"><button class="del" onclick="delPlate('+id+')">×</button></div></div>'}
-function addPlate(){pid++;plates.push(pid);var d=document.createElement("div");d.innerHTML=makePlateHTML(pid);var el=d.firstElementChild;$("plate-list").appendChild(el);bindInputs(el);calc()}
-function delPlate(id){var el=$("p"+id);if(el)el.remove();plates=plates.filter(function(x){return x!==id});calc()}
-function makeRebarHTML(id){return '<div class="it" id="rb'+id+'"><div class="r2"><label>直径</label><input id="rd'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>长度</label><input id="rl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>数量</label><input id="rn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delRebar('+id+')">×</button></div></div>'}
-function addRebar(){rid++;rebars.push(rid);var d=document.createElement("div");d.innerHTML=makeRebarHTML(rid);var el=d.firstElementChild;$("rebar-list").appendChild(el);bindInputs(el);calc()}
-function delRebar(id){var el=$("rb"+id);if(el)el.remove();rebars=rebars.filter(function(x){return x!==id});calc()}
-function makeChannelHTML(id){return '<div class="it" id="ch'+id+'"><div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span><label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span><label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delChannel('+id+')">×</button></div></div>'}
-function addChannel(){cid++;channels.push(cid);var d=document.createElement("div");d.innerHTML=makeChannelHTML(cid);var el=d.firstElementChild;$("channel-list").appendChild(el);bindInputs(el);calc()}
-function delChannel(id){var el=$("ch"+id);if(el)el.remove();channels=channels.filter(function(x){return x!==id});calc()}
-function makeShimHTML(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="sq'+id+'" class="w2" type="number" step="any"><span class="unit">个</span><button class="del" onclick="delShim('+id+')">×</button></div></div>'}
-function addShim(){sid++;shims.push(sid);var d=document.createElement("div");d.innerHTML=makeShimHTML(sid);var el=d.firstElementChild;$("shim-list").appendChild(el);bindInputs(el);calc()}
-function delShim(id){var el=$("sh"+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
+function bi(el){el.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})})}
+function mP(id){return '<div class="it" id="p'+id+'"><div class="toprow"><div class="half"><div class="r2"><b>长</b><input id="pl'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>宽</b><input id="pw'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>厚</b><input id="pt'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div></div><div class="half r"><div class="r2"><label>孔长</label><input id="phl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>孔宽</label><input id="phw'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>数量</label><input id="phn'+id+'" class="w2" type="number" step="any"><span class="unit">个</span></div></div></div><div class="r2" style="margin:4px 0 0;justify-content:flex-end"><button class="del" onclick="dP('+id+')">x</button></div></div>'}
+function aP(){pid++;plates.push(pid);var d=document.createElement("div");d.innerHTML=mP(pid);var el=d.firstElementChild;$("plate-list").appendChild(el);bi(el);calc()}
+function dP(id){var el=$("p"+id);if(el)el.remove();plates=plates.filter(function(x){return x!==id});calc()}
+function mR(id){return '<div class="it" id="rb'+id+'"><div class="r2"><label>直径</label><input id="rd'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>长度</label><input id="rl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>数量</label><input id="rn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="dR('+id+')">x</button></div></div>'}
+function aR(){rid++;rebars.push(rid);var d=document.createElement("div");d.innerHTML=mR(rid);var el=d.firstElementChild;$("rebar-list").appendChild(el);bi(el);calc()}
+function dR(id){var el=$("rb"+id);if(el)el.remove();rebars=rebars.filter(function(x){return x!==id});calc()}
+function mC(id){return '<div class="it" id="ch'+id+'"><div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span><label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span><label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="dC('+id+')">x</button></div></div>'}
+function aC(){cid++;channels.push(cid);var d=document.createElement("div");d.innerHTML=mC(cid);var el=d.firstElementChild;$("channel-list").appendChild(el);bi(el);calc()}
+function dC(id){var el=$("ch"+id);if(el)el.remove();channels=channels.filter(function(x){return x!==id});calc()}
+function mS(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="sq'+id+'" class="w2" type="number" step="any"><span class="unit">个</span><button class="del" onclick="dS('+id+')">x</button></div></div>'}
+function aS(){sid++;shims.push(sid);var d=document.createElement("div");d.innerHTML=mS(sid);var el=d.firstElementChild;$("shim-list").appendChild(el);bi(el);calc()}
+function dS(id){var el=$("sh"+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
 
 function calc(){
-  var tPW=0,tPP=0,scrapTotal=0;plates.forEach(function(id){
+  var tPW=0,tPP=0,st=0;plates.forEach(function(id){
     var l=gv("pl"+id),w=gv("pw"+id),t=gv("pt"+id),hl=gv("phl"+id),hw=gv("phw"+id),hn=gi("phn"+id),up=gv("pUp"),sp=gv("pSp");
-    var gv2=l*w*t,hv=(hl&&hw&&hn)?hl*hw*t*hn:0,gw=kg(gv2),sw=kg(hv);tPW+=gw-sw;tPP+=tp(gw,up)-tp(sw,sp);scrapTotal+=tp(sw,sp)
+    var gv2=l*w*t,hv=(hl&&hw&&hn)?hl*hw*t*hn:0,gw=kg(gv2),sw=kg(hv);tPW+=gw-sw;tPP+=tp(gw,up)-tp(sw,sp);st+=tp(sw,sp)
   });
   var tRW=0,tRP=0;rebars.forEach(function(id){
     var rd=gv("rd"+id),rl=gv("rl"+id),rn=gi("rn"+id),ru=gv("rUp");
-    if(rd&&rl&&rn){var v=Math.PI*(rd/2)*(rd/2)*rl*rn;var w=kg(v);tRW+=w;tRP+=tp(w,ru)}
+    if(rd&&rl&&rn){var v=3.14159*(rd/2)*(rd/2)*rl*rn;var w=kg(v);tRW+=w;tRP+=tp(w,ru)}
   });
   var tSW=0,tSP=0;shims.forEach(function(id){
-    var sl=gv("sl"+id),sw=gv("sw"+id),st=gv("st"+id),sq=gi("sq"+id)||1,su=gv("sUp");
-    if(sl&&sw&&st){var v=sl*sw*st*sq;var w=kg(v);tSW+=w;tSP+=tp(w,su)}
+    var sl=gv("sl"+id),sw=gv("sw"+id),st=gv("st"+id),sq=gi("sq"+id)||0,su=gv("sUp");
+    if(sl&&sw&&st&&sq){var v=sl*sw*st*sq;var w=kg(v);tSW+=w;tSP+=tp(w,su)}
   });
   var tCW=0,tCP=0;channels.forEach(function(id){
     var cl=gv("cl"+id),ck=gv("ck"+id),cn=gi("cn"+id),cu=gv("cUp");
     if(cl&&ck&&cn){var w=(cl/1000)*ck*cn;tCW+=w;tCP+=tp(w,cu)}
   });
-  var wl=gv("wlen"),wc=gv("wcir"),wn=gi("wcirn");
-  var w1=wl*WELD,w2=Math.PI*wc*wn*WELD;
+  var wl=gv("wlen"),wc=gv("wcir"),wn=gi("wcirn"),wu=(gv("wUp")||0.4)/100;
+  var w1=wl*wu,w2=3.14159*wc*wn*wu;
   var fr=gv("fr"),zf=gv("zf"),dx=gv("dx");
   var tn=tPW+tRW+tSW+tCW;
   var sh=tp(tn,fr)+tp(tn,zf)+tp(tn,dx);
@@ -308,11 +207,11 @@ function calc(){
   $("total_wt").textContent=fmt(tn);
   $("w1_price").textContent="¥"+fmt(w1);$("w2_price").textContent="¥"+fmt(w2);
   $("shared").textContent="¥"+fmt(tp(tn,fr))+" / ¥"+fmt(tp(tn,zf))+" / ¥"+fmt(tp(tn,dx));
-  $("scrap_val").textContent="¥"+fmt(scrapTotal);$("total").textContent="¥"+fmt(Math.max(0,tot))
+  $("scrap_val").textContent="¥"+fmt(st);$("total").textContent="¥"+fmt(Math.max(0,tot))
 }
-document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",calc)});addPlate();addRebar();addChannel();addShim();checkLogin();
+document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})});aP();aR();aS();aC();cl();
+setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},300000);
 </script>
 </body>
 </html>
-
 
