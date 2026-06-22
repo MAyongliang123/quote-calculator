@@ -163,7 +163,7 @@ function sm(m,e){var el=document.getElementById("admin-msg");el.className=e?"adm
 async function lu(ap){
   document.getElementById("admin-msg").textContent="加载中...";var t0=Date.now();
   try{var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap||window._ap})});var d=await r.json();var t1=Date.now();
-    if(d.users){var h="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";h+='<tr><td>'+u.user+'</td><td>'+(u.on?"正常":"禁用")+'</td><td>'+rt+'</td><td><button class="toggle-btn" onclick="tu(\''+u.user+'\')">'+(u.on?"禁用":"启用")+'</button> <button class="toggle-btn" style="border-color:#c66;color:#c66" onclick="du(\''+u.user+'\')">删除</button></td></tr>'});document.getElementById("user-list").innerHTML=h;document.getElementById("admin-msg").textContent="完成 (耗时"+(t1-t0)+"ms)"}
+    if(d.users){var h="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";h+='<tr><td>'+u.user+'</td><td>'+(u.on?"正常":"禁用")+'</td><td>'+rt+'</td><td><button class="toggle-btn" onclick="tu(this,\''+u.user+'\')">'+(u.on?"禁用":"启用")+'</button> <button class="toggle-btn" style="border-color:#c66;color:#c66" onclick="du(this,\''+u.user+'\')">删除</button></td></tr>'});document.getElementById("user-list").innerHTML=h;document.getElementById("admin-msg").textContent="完成 (耗时"+(t1-t0)+"ms)"}
     else{sm(d.err||"加载失败",true)}
   }catch(e){sm("网络错误",true)}
 }
@@ -175,10 +175,10 @@ document.getElementById("create-btn").onclick=async function(){
     else{sm(res.err,true)}
   }catch(e){sm("网络错误",true)}
 };
-async function tu(user){var t0=Date.now();
+async function tu(btn,user){btn.disabled=true;btn.textContent="处理中...";var t0=Date.now();
   try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm(d.msg+" (耗时"+(t1-t0)+"ms)");lu()}else{sm(d.err,true)}}catch(e){sm("网络错误",true)}
 }
-async function du(user){
+async function du(btn,user){btn.disabled=true;btn.textContent="删除中...";if(!confirm("确定永久删除账号 "+user+" 吗？")){btn.disabled=false;btn.textContent="删除";return}
   if(!confirm("确定永久删除账号 "+user+" 吗？")) return;var t0=Date.now();
   try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm("账号 "+user+" 已删除 (耗时"+(t1-t0)+"ms)");lu()}else{sm(d.err,true)}}catch(e){sm("网络错误",true)}
 }
@@ -241,6 +241,7 @@ window.addEventListener("hashchange",function(){cl()});setInterval(function(){fe
 </script>
 </body>
 </html>
+
 
 
 
