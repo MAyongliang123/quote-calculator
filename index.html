@@ -118,6 +118,9 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
 <script>
 var API="https://1445439860-dk7regmeb9.ap-guangzhou.tencentscf.com";
 function to(ms){var c=new AbortController();setTimeout(function(){c.abort()},ms);return c.signal}
+var wi=null;
+function wm(){wi=setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},30000)}
+function ws(){if(wi){clearInterval(wi);wi=null}}
 function gt(){return localStorage.getItem("qt")}
 function st(t){localStorage.setItem("qt",t)}
 function dt(){localStorage.removeItem("qt")}
@@ -139,7 +142,7 @@ document.getElementById("logout-btn").onclick=function(){dt();sl()};
 
 async function cl(){
   var t=gt();
-  if(window.location.hash==="#admin"&&!t){sa();document.getElementById("admin-panel").style.display="none";return}
+  if(window.location.hash==="#admin"&&!t){wm();sa();document.getElementById("admin-panel").style.display="none";return}
   if(!t){sl();return}
   try{var r=await fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:t}),signal:to(15000)});var d=await r.json();
     if(d.ok){document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";sc();calc()}
@@ -147,13 +150,13 @@ async function cl(){
   }catch(e){sl()}
 }
 
-document.getElementById("admin-back").onclick=function(){if(gt()){sc()}else{window.location.hash="";sl()}}
+document.getElementById("admin-back").onclick=function(){ws();if(gt()){sc()}else{window.location.hash="";sl()}}
 document.getElementById("admin-login-btn").onclick=async function(){
   var ap=document.getElementById("admin-pass").value.trim(),m=document.getElementById("admin-msg"),t0=Date.now();
   if(!ap){m.className="admin-err";m.textContent="请输入密码";return}
   document.getElementById("admin-msg").className="admin-msg";document.getElementById("admin-msg").textContent="验证中...";
   try{var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap}),signal:to(15000)});var d=await r.json();var t1=Date.now();
-    if(d&&d.users){document.getElementById("admin-panel").style.display="block";m.textContent="";lu(ap);window._ap=ap}
+    if(d&&d.users){wm();document.getElementById("admin-panel").style.display="block";m.textContent="";lu(ap);window._ap=ap}
     else{m.className="admin-err";m.textContent="密码错误 (耗时"+(t1-t0)+"ms)"}
   }catch(e){m.className="admin-err";m.textContent="连接失败"}
 };
@@ -178,7 +181,7 @@ async function tu(btn,user){btn.disabled=true;btn.textContent="处理中...";var
   try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){btn.disabled=false;btn.textContent=d.msg.indexOf("禁用")>=0?"启用":"禁用";sm(d.msg+" (耗时"+(t1-t0)+"ms)")}else{btn.disabled=false;btn.textContent="重试";sm(d.err,true)}}catch(e){btn.disabled=false;btn.textContent="重试";sm("网络错误",true)}
 }
 async function du(btn,user){if(!confirm("确定永久删除账号 "+user+" 吗？")) return;btn.disabled=true;btn.textContent="删除中...";var t0=Date.now();
-  try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){btn.textContent="已删";sm("账号 "+user+" 已删除 (耗时"+(t1-t0)+"ms)")}else{btn.disabled=false;btn.textContent="重试";sm(d.err,true)}}catch(e){btn.disabled=false;btn.textContent="重试";sm("网络错误",true)}
+  try{var r=await fetch(API+"/admin/delete",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm("账号 "+user+" 已删除 (耗时"+(t1-t0)+"ms)");lu()}else{btn.disabled=false;btn.textContent="重试";sm(d.err,true)}}catch(e){btn.disabled=false;btn.textContent="重试";sm("网络错误",true)}
 }
 
 const D=7.85;var pid=0,rid=0,cid=0,sid=0,plates=[],rebars=[],channels=[],shims=[];
@@ -235,10 +238,11 @@ function calc(){
   $("scrap_val").textContent="¥"+fmt(st);$("total").textContent="¥"+fmt(Math.max(0,tot))
 }
 document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})});aP();aR();aS();aC();cl();
-window.addEventListener("hashchange",function(){cl()});setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},30000);
+window.addEventListener("hashchange",function(){cl()});
 </script>
 </body>
 </html>
+
 
 
 
