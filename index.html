@@ -119,6 +119,7 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
 var API="https://1445439860-dk7regmeb9.ap-guangzhou.tencentscf.com";
 function gt(){return localStorage.getItem("qt")}
 function st(t){localStorage.setItem("qt",t)}
+function st(t){localStorage.setItem("qt",t)}
 function dt(){localStorage.removeItem("qt")}
 function sl(){document.getElementById("login-page").style.display="block";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="none"}
 function sc(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="block";document.getElementById("admin-page").style.display="none"}
@@ -128,11 +129,10 @@ document.getElementById("login-btn").onclick=async function(){
   var u=document.getElementById("login-user").value.trim(),p=document.getElementById("login-pass").value.trim(),e=document.getElementById("login-err");
   if(!u||!p){e.textContent="请输入用户名和密码";e.style.display="block";return}
   e.style.display="none";document.getElementById("login-spinner").style.display="block";document.getElementById("login-btn").disabled=true;
-  try{var r=await fetch(API+"/login",{method:"POST",body:JSON.stringify({u:u,p:p})});var d=await r.json();document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;
-  try{var r=await fetch(API+"/login",{method:"POST",body:JSON.stringify({u:u,p:p})});var d=await r.json();document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;
+  try{var r=await fetch(API+"/login",{method:"POST",body:JSON.stringify({u:u,p:p}),signal:AbortSignal.timeout(15000)});var d=await r.json();document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;
     if(d.ok){st(d.token);document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";sc();calc()}
     else{e.textContent=d.err;e.style.display="block"}
-  }catch(e){document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;e.textContent="网络错误";e.style.display="block"}
+  }catch(ex){document.getElementById("login-spinner").style.display="none";document.getElementById("login-btn").disabled=false;document.getElementById("login-err").textContent="网络错误";document.getElementById("login-err").style.display="block"}
 };
 document.getElementById("login-pass").onkeydown=function(e){if(e.key=="Enter")document.getElementById("login-btn").click()};
 document.getElementById("logout-btn").onclick=function(){dt();sl()};
@@ -141,7 +141,7 @@ async function cl(){
   var t=gt();
   if(window.location.hash==="#admin"&&!t){sa();document.getElementById("admin-panel").style.display="none";return}
   if(!t){sl();return}
-  try{var r=await fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:t})});var d=await r.json();
+  try{var r=await fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:t}),signal:AbortSignal.timeout(15000)});var d=await r.json();
     if(d.ok){document.getElementById("disp-user").textContent=d.user;document.getElementById("disp-days").textContent=d.days>=99999?"永久":d.days+"天";sc();calc()}
     else{dt();window.location.hash="";sl()}
   }catch(e){sl()}
@@ -152,7 +152,7 @@ document.getElementById("admin-login-btn").onclick=async function(){
   var ap=document.getElementById("admin-pass").value.trim(),m=document.getElementById("admin-msg"),t0=Date.now();
   if(!ap){m.className="admin-err";m.textContent="请输入密码";return}
   document.getElementById("admin-msg").className="admin-msg";document.getElementById("admin-msg").textContent="验证中...";
-  try{var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap})});var d=await r.json();var t1=Date.now();
+  try{var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap}),signal:AbortSignal.timeout(15000)});var d=await r.json();var t1=Date.now();
     if(d&&d.users){document.getElementById("admin-panel").style.display="block";m.textContent="";lu(ap);window._ap=ap}
     else{m.className="admin-err";m.textContent="密码错误 (耗时"+(t1-t0)+"ms)"}
   }catch(e){m.className="admin-err";m.textContent="连接失败"}
@@ -236,8 +236,9 @@ function calc(){
   $("scrap_val").textContent="¥"+fmt(st);$("total").textContent="¥"+fmt(Math.max(0,tot))
 }
 document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})});aP();aR();aS();aC();cl();
-setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},300000);
+window.addEventListener("hashchange",function(){cl()});setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},300000);
 </script>
 </body>
 </html>
+
 
