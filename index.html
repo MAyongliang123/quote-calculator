@@ -117,16 +117,16 @@ body{background:#f0f0f0;display:flex;justify-content:center;padding:12px 8px 32p
 
 <script>
 var API="https://1445439860-dk7regmeb9.ap-guangzhou.tencentscf.com";
-function to(ms){var c=new AbortController();setTimeout(function(){c.abort()},ms);return c.signal}
-var wi=null;
-function wm(){wi=setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},30000)}
-function ws(){if(wi){clearInterval(wi);wi=null}}
-function gt(){return localStorage.getItem("qt")}
-function st(t){localStorage.setItem("qt",t)}
-function dt(){localStorage.removeItem("qt")}
-function sl(){document.getElementById("login-page").style.display="block";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="none"}
-function sc(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="block";document.getElementById("admin-page").style.display="none"}
-function sa(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="block"}
+function timeout(ms){var c=new AbortController();setTimeout(function(){c.abort()},ms);return c.signal}
+var warmInt=null;
+function startWarm(){wi=setInterval(function(){fetch(API+"/verify",{method:"POST",body:JSON.stringify({token:""})}).catch(function(){})},30000)}
+function stopWarm(){if(wi){clearInterval(wi);warmInt=null}}
+function getToken(){return localStorage.getItem("qt")}
+function setToken(t){localStorage.setItem("qt",t)}
+function delToken(){localStorage.removeItem("qt")}
+function showLogin(){document.getElementById("login-page").style.display="block";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="none"}
+function showCalc(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="block";document.getElementById("admin-page").style.display="none"}
+function showAdmin(){document.getElementById("login-page").style.display="none";document.getElementById("calc-page").style.display="none";document.getElementById("admin-page").style.display="block"}
 
 document.getElementById("login-btn").onclick=async function(){
   var u=document.getElementById("login-user").value.trim(),p=document.getElementById("login-pass").value.trim(),e=document.getElementById("login-err");
@@ -140,7 +140,7 @@ document.getElementById("login-btn").onclick=async function(){
 document.getElementById("login-pass").onkeydown=function(e){if(e.key=="Enter")document.getElementById("login-btn").click()};
 document.getElementById("logout-btn").onclick=function(){dt();sl()};
 
-async function cl(){
+async function checkLogin(){
   var t=gt();
   if(window.location.hash==="#admin"&&!t){wm();sa();document.getElementById("admin-panel").style.display="none";return}
   if(!t){sl();return}
@@ -150,7 +150,7 @@ async function cl(){
   }catch(e){sl()}
 }
 
-document.getElementById("admin-back").onclick=function(){ws();if(gt()){sc()}else{window.location.hash="";sl()}}
+document.getElementById("admin-back").onclick=function(){stopWarm();if(gt()){sc()}else{window.location.hash="";sl()}}
 document.getElementById("admin-login-btn").onclick=async function(){
   var ap=document.getElementById("admin-pass").value.trim(),m=document.getElementById("admin-msg"),t0=Date.now();
   if(!ap){m.className="admin-err";m.textContent="请输入密码";return}
@@ -160,12 +160,12 @@ document.getElementById("admin-login-btn").onclick=async function(){
     else{m.className="admin-err";m.textContent="密码错误 (耗时"+(t1-t0)+"ms)"}
   }catch(e){m.className="admin-err";m.textContent="连接失败"}
 };
-function sm(m,e){var el=document.getElementById("admin-msg");el.className=e?"admin-err":"admin-msg";el.textContent=m}
+function showMsg(m,e){var el=document.getElementById("admin-msg");el.className=e?"admin-err":"admin-msg";el.textContent=m}
 
-async function lu(ap){
+async function loadUserList(ap){
   document.getElementById("admin-msg").textContent="加载中...";var t0=Date.now();
   try{var r=await fetch(API+"/admin/list",{method:"POST",body:JSON.stringify({ap:ap||window._ap})});var d=await r.json();var t1=Date.now();
-    if(d.users){var h="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";h+='<tr><td>'+u.user+'</td><td>'+(u.on?"正常":"禁用")+'</td><td>'+rt+'</td><td><button class="toggle-btn" onclick="tu(this,\''+u.user+'\')">'+(u.on?"禁用":"启用")+'</button> <button class="toggle-btn" style="border-color:#c66;color:#c66" onclick="du(this,\''+u.user+'\')">删除</button></td></tr>'});document.getElementById("user-list").innerHTML=h;document.getElementById("admin-msg").textContent="完成 (耗时"+(t1-t0)+"ms)"}
+    if(d.users){var h="";d.users.forEach(function(u){var rt=u.remain>=99999?"永久":u.remain+"天";h+='<tr><td>'+u.user+'</td><td>'+(u.on?"正常":"禁用")+'</td><td>'+rt+'</td><td><button class="toggle-btn" onclick="toggleUser(this,\''+u.user+'\')">'+(u.on?"禁用":"启用")+'</button> <button class="toggle-btn" style="border-color:#c66;color:#c66" onclick="deleteUser(this,\''+u.user+'\')">删除</button></td></tr>'});document.getElementById("user-list").innerHTML=h;document.getElementById("admin-msg").textContent="完成 (耗时"+(t1-t0)+"ms)"}
     else{sm(d.err||"加载失败",true)}
   }catch(e){sm("网络错误",true)}
 }
@@ -177,10 +177,10 @@ document.getElementById("create-btn").onclick=async function(){
     else{sm(res.err,true)}
   }catch(e){sm("网络错误",true)}
 };
-async function tu(btn,user){btn.disabled=true;btn.textContent="处理中...";var t0=Date.now();
+async function toggleUser(btn,user){btn.disabled=true;btn.textContent="处理中...";var t0=Date.now();
   try{var r=await fetch(API+"/admin/toggle",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){btn.disabled=false;btn.textContent=d.msg.indexOf("禁用")>=0?"启用":"禁用";sm(d.msg+" (耗时"+(t1-t0)+"ms)");lu()}else{btn.disabled=false;btn.textContent="重试";sm(d.err,true)}}catch(e){btn.disabled=false;btn.textContent="重试";sm("网络错误",true)}
 }
-async function du(btn,user){if(!confirm("确定永久删除账号 "+user+" 吗？")) return;btn.disabled=true;btn.textContent="删除中...";var t0=Date.now();
+async function deleteUser(btn,user){if(!confirm("确定永久删除账号 "+user+" 吗？")) return;btn.disabled=true;btn.textContent="删除中...";var t0=Date.now();
   try{var r=await fetch(API+"/admin/delete",{method:"POST",body:JSON.stringify({u:user,ap:window._ap})});var d=await r.json();var t1=Date.now();if(d.ok){sm("账号 "+user+" 已删除 (耗时"+(t1-t0)+"ms)");lu()}else{btn.disabled=false;btn.textContent="重试";sm(d.err,true)}}catch(e){btn.disabled=false;btn.textContent="重试";sm("网络错误",true)}
 }
 
@@ -192,19 +192,19 @@ function gv(id){return parseFloat($(id).value)||0}
 function gi(id){return parseInt($(id).value)||0}
 function kg(m){return m/1e3*D/1e3}
 function tp(k,u){return k/1e3*u}
-function bi(el){el.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})})}
-function mP(id){return '<div class="it" id="p'+id+'"><div class="toprow"><div class="half"><div class="r2"><b>长</b><input id="pl'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>宽</b><input id="pw'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>厚</b><input id="pt'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div></div><div class="half r"><div class="r2"><label>孔长</label><input id="phl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>孔宽</label><input id="phw'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>数量</label><input id="phn'+id+'" class="w2" type="number" step="any"><span class="unit">个</span></div></div></div><div class="r2" style="margin:4px 0 0;justify-content:flex-end"><button class="del" onclick="dP('+id+')">x</button></div></div>'}
-function aP(){pid++;plates.push(pid);var d=document.createElement("div");d.innerHTML=mP(pid);var el=d.firstElementChild;$("plate-list").appendChild(el);bi(el);calc()}
-function dP(id){var el=$("p"+id);if(el)el.remove();plates=plates.filter(function(x){return x!==id});calc()}
-function mR(id){return '<div class="it" id="rb'+id+'"><div class="r2"><label>直径</label><input id="rd'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>长度</label><input id="rl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>数量</label><input id="rn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="dR('+id+')">x</button></div></div>'}
-function aR(){rid++;rebars.push(rid);var d=document.createElement("div");d.innerHTML=mR(rid);var el=d.firstElementChild;$("rebar-list").appendChild(el);bi(el);calc()}
-function dR(id){var el=$("rb"+id);if(el)el.remove();rebars=rebars.filter(function(x){return x!==id});calc()}
-function mC(id){return '<div class="it" id="ch'+id+'"><div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span><label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span><label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="dC('+id+')">x</button></div></div>'}
-function aC(){cid++;channels.push(cid);var d=document.createElement("div");d.innerHTML=mC(cid);var el=d.firstElementChild;$("channel-list").appendChild(el);bi(el);calc()}
-function dC(id){var el=$("ch"+id);if(el)el.remove();channels=channels.filter(function(x){return x!==id});calc()}
-function mS(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="sq'+id+'" class="w2" type="number" step="any"><span class="unit">个</span><button class="del" onclick="dS('+id+')">x</button></div></div>'}
-function aS(){sid++;shims.push(sid);var d=document.createElement("div");d.innerHTML=mS(sid);var el=d.firstElementChild;$("shim-list").appendChild(el);bi(el);calc()}
-function dS(id){var el=$("sh"+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
+function bindInputs(el){el.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})})}
+function makePlateHTML(id){return '<div class="it" id="p'+id+'"><div class="toprow"><div class="half"><div class="r2"><b>长</b><input id="pl'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>宽</b><input id="pw'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><b>厚</b><input id="pt'+id+'" class="w4" type="number" step="any"><span class="unit">mm</span></div></div><div class="half r"><div class="r2"><label>孔长</label><input id="phl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>孔宽</label><input id="phw'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span></div><div class="r2"><label>数量</label><input id="phn'+id+'" class="w2" type="number" step="any"><span class="unit">个</span></div></div></div><div class="r2" style="margin:4px 0 0;justify-content:flex-end"><button class="del" onclick="delPlate('+id+')">x</button></div></div>'}
+function addPlate(){pid++;plates.push(pid);var d=document.createElement("div");d.innerHTML=makePlateHTML(pid);var el=d.firstElementChild;$("plate-list").appendChild(el);bi(el);calc()}
+function delPlate(id){var el=$("p"+id);if(el)el.remove();plates=plates.filter(function(x){return x!==id});calc()}
+function makeRebarHTML(id){return '<div class="it" id="rb'+id+'"><div class="r2"><label>直径</label><input id="rd'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>长度</label><input id="rl'+id+'" class="w2" type="number" step="any"><span class="unit">mm</span><label>数量</label><input id="rn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delRebar('+id+')">x</button></div></div>'}
+function addRebar(){rid++;rebars.push(rid);var d=document.createElement("div");d.innerHTML=makeRebarHTML(rid);var el=d.firstElementChild;$("rebar-list").appendChild(el);bi(el);calc()}
+function delRebar(id){var el=$("rb"+id);if(el)el.remove();rebars=rebars.filter(function(x){return x!==id});calc()}
+function makeChannelHTML(id){return '<div class="it" id="ch'+id+'"><div class="r2"><label>长度</label><input id="cl'+id+'" class="w3" type="number" step="any"><span class="unit">mm</span><label>公斤/米</label><input id="ck'+id+'" class="w2" type="number" step="any"><span class="unit">kg/m</span><label>数量</label><input id="cn'+id+'" class="w2" type="number" step="any"><span class="unit">根</span><button class="del" onclick="delChannel('+id+')">x</button></div></div>'}
+function addChannel(){cid++;channels.push(cid);var d=document.createElement("div");d.innerHTML=makeChannelHTML(cid);var el=d.firstElementChild;$("channel-list").appendChild(el);bi(el);calc()}
+function delChannel(id){var el=$("ch"+id);if(el)el.remove();channels=channels.filter(function(x){return x!==id});calc()}
+function makeShimHTML(id){return '<div class="it" id="sh'+id+'"><div class="r2"><label>长</label><input id="sl'+id+'" type="number" step="any"><span class="unit">mm</span> <label>宽</label><input id="sw'+id+'" type="number" step="any"><span class="unit">mm</span> <label>厚</label><input id="st'+id+'" type="number" step="any"><span class="unit">mm</span> <label>数量</label><input id="sq'+id+'" class="w2" type="number" step="any"><span class="unit">个</span><button class="del" onclick="delShim('+id+')">x</button></div></div>'}
+function addShim(){sid++;shims.push(sid);var d=document.createElement("div");d.innerHTML=makeShimHTML(sid);var el=d.firstElementChild;$("shim-list").appendChild(el);bi(el);calc()}
+function delShim(id){var el=$("sh"+id);if(el)el.remove();shims=shims.filter(function(x){return x!==id});calc()}
 
 function calc(){
   var tPW=0,tPP=0,st=0;plates.forEach(function(id){
@@ -238,11 +238,13 @@ function calc(){
   $("shared").textContent="¥"+fmt(tp(tn,fr))+" / ¥"+fmt(tp(tn,zf))+" / ¥"+fmt(tp(tn,dx));
   $("scrap_val").textContent="¥"+fmt(st);$("total").textContent="¥"+fmt(Math.max(0,tot))
 }
-document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})});aP();aR();aS();aC();cl();
+document.querySelectorAll("input").forEach(function(i){i.addEventListener("input",function(){calc()})});addPlate();addRebar();addShim();addChannel();cl();
 window.addEventListener("hashchange",function(){cl()});
 </script>
 </body>
 </html>
+
+
 
 
 
